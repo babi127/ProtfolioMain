@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import emailjs from 'emailjs-com';
-import { Github, Linkedin, Twitter, Mail, Send, Briefcase, Code, User, Home, ChevronsDown, ExternalLink, Server, Smartphone, Brain } from 'lucide-react';
+import DOMPurify from 'dompurify';
+import { Github, Linkedin, Mail, Send, Briefcase, Code, User, Home, ChevronsDown, ExternalLink, Server, Smartphone, Brain } from 'lucide-react';
 import BirukImg from './assets/Biruk.png';
 
-// Helper component for section titles (remains the same)
+// Helper component for section titles
 const SectionTitle = ({ children }) => (
   <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-cyan-400 tracking-wider">
     {children}
   </h2>
 );
 
-// Navigation Component (remains the same)
+// Navigation Component
 const Navigation = ({ activeSection }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,9 +36,9 @@ const Navigation = ({ activeSection }) => {
     e.preventDefault();
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
-        targetElement.scrollIntoView({
-            behavior: 'smooth'
-        });
+      targetElement.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
     if (mobileMenuOpen) {
       setMobileMenuOpen(false);
@@ -66,6 +67,7 @@ const Navigation = ({ activeSection }) => {
                     : 'hover:text-cyan-400'
                   }
                 `}
+                aria-current={isActive ? 'page' : undefined}
               >
                 {link.icon}
                 <span className={`${isActive ? '' : 'group-hover:underline'}`}>{link.label}</span>
@@ -75,7 +77,7 @@ const Navigation = ({ activeSection }) => {
         </div>
         {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-300 focus:outline-none">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-300 focus:outline-none" aria-label="Toggle menu">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}></path>
             </svg>
@@ -86,29 +88,30 @@ const Navigation = ({ activeSection }) => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-gray-900/90 backdrop-blur-md py-2">
           {navLinks.map(link => {
-             const isActive = activeSection === link.id;
+            const isActive = activeSection === link.id;
             return (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={(e) => smoothScroll(e, link.href)}
-              className={`
-                block px-6 py-3 text-gray-300 transition-colors duration-300 flex items-center space-x-3
-                ${isActive ? 'text-cyan-300 bg-gray-800' : 'hover:text-cyan-400 hover:bg-gray-800'}
-              `}
-            >
-              {link.icon}
-              <span>{link.label}</span>
-            </a>
-          );
-        })}
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => smoothScroll(e, link.href)}
+                className={`
+                  block px-6 py-3 text-gray-300 transition-colors duration-300 flex items-center space-x-3
+                  ${isActive ? 'text-cyan-300 bg-gray-800' : 'hover:text-cyan-400 hover:bg-gray-800'}
+                `}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {link.icon}
+                <span>{link.label}</span>
+              </a>
+            );
+          })}
         </div>
       )}
     </nav>
   );
 };
 
-// Hero Section Component (remains the same)
+// Hero Section Component
 const HeroSection = () => {
   const [typedTagline, setTypedTagline] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
@@ -155,7 +158,7 @@ const HeroSection = () => {
     e.preventDefault();
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
+      targetElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -177,7 +180,7 @@ const HeroSection = () => {
             }}
           />
         ))}
-         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-transparent to-gray-900 opacity-50 animate-gradient-xy"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-transparent to-gray-900 opacity-50 animate-gradient-xy"></div>
       </div>
 
       <div className="z-10">
@@ -208,7 +211,7 @@ const HeroSection = () => {
         </div>
       </div>
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
-        <a href="#about" onClick={(e) => smoothScrollToSection(e, '#about')}>
+        <a href="#about" onClick={(e) => smoothScrollToSection(e, '#about')} aria-label="Scroll to About section">
           <ChevronsDown size={48} className="text-gray-500 animate-bounce hover:text-cyan-400 transition-colors" />
         </a>
       </div>
@@ -216,7 +219,7 @@ const HeroSection = () => {
   );
 };
 
-// About Section Component (updated)
+// About Section Component
 const AboutSection = () => {
   const skills = [
     { name: "JavaScript", icon: <Code size={24} className="text-yellow-400" />, level: "66%" },
@@ -328,29 +331,29 @@ const AboutSection = () => {
   );
 };
 
-// Projects Section Component (updated)
+// Projects Section Component
 const ProjectsSection = () => {
   const projects = [
-    {
-      title: "Quiz App",
-      description: "A concept quiz app with a focus on UI/UX, built with React and Tailwind CSS.",
-      tech: ["React", "Tailwind CSS"],
-      imageUrl: "https://thumbs.dreamstime.com/b/quiz-1652844.jpg",
-      githubLink: "#"
-    },
-    {
-      title: "Tic Tac Toe",
-      description: "A smart Tic Tac Toe game that uses AI to play against the user. Features collaborative tools.",
-      tech: ["React", "Tailwind CSS"],
-      imageUrl: "https://thumbs.dreamstime.com/b/tic-tac-toe-game-winner-18354614.jpg",
-      githubLink: "#"
-    },
     {
       title: "Drawing App",
       description: "A web app for drawing and visualizing complex datasets using D3.js and React, offering interactive charts and graphs.",
       tech: ["React", "Tailwind CSS"],
-      imageUrl: "https://thumbs.dreamstime.com/b/child-girl-making-easter-craft-tic-tac-toe-game-bunnies-flowers-cork-home-50951679.jpg",
-      githubLink: "#"
+      imageUrl: "https://cdn.pixabay.com/photo/2023/12/07/11/11/girl-8435339_1280.png", // Image for Drawing App
+      projectLink: "https://drawing-sandy.vercel.app/"
+    },
+    {
+      title: "Quiz App",
+      description: "A concept quiz app with a focus on UI/UX, built with React and Tailwind CSS.",
+      tech: ["React", "Tailwind CSS"],
+      imageUrl: "https://media.istockphoto.com/id/2172452640/vector/question-mark-seamless-repeating-tileable-background.webp?s=2048x2048&w=is&k=20&c=FxWCXZE2zc7JgzK4UYtKqW6eTocgihLcXOMXXr052KU=", // Image for Quiz App
+      projectLink: "https://quiz-app-inky-psi.vercel.app/"
+    },
+    {
+      title: "Progress Bar Project",
+      description: "A project showcasing progress bars with various features, built with React and Tailwind CSS.",
+      tech: ["React", "Tailwind CSS"],
+      imageUrl: "https://media.istockphoto.com/id/504749876/vector/glowing-colorful-loaders-set.webp?s=2048x2048&w=is&k=20&c=ddo5HE2MaH0SbC0A4clGLnhX1SjyD0_o7O3W5TTRQCw=", // Image for Progress Bar Project
+      projectLink: "https://progress-bar-two-xi.vercel.app/"
     }
   ];
 
@@ -381,8 +384,8 @@ const ProjectsSection = () => {
                 </div>
               </div>
               <div className="mt-auto flex justify-end items-center pt-4 border-t border-gray-700">
-                <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 transition-colors duration-300 flex items-center text-sm">
-                  <Github size={18} className="mr-2" /> View Code
+                <a href={project.projectLink} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 transition-colors duration-300 flex items-center text-sm">
+                  <ExternalLink size={18} className="mr-2" /> View Project
                 </a>
               </div>
             </div>
@@ -393,7 +396,7 @@ const ProjectsSection = () => {
   );
 };
 
-// Experience Section Component (updated)
+// Experience Section Component
 const ExperienceSection = () => {
   const experiences = [
     {
@@ -447,7 +450,7 @@ const ExperienceSection = () => {
             </div>
           </div>
         ))}
-         {experiences.length === 0 && (
+        {experiences.length === 0 && (
           <p className="text-center text-gray-400 text-lg">Eager to gain professional experience and contribute to exciting projects!</p>
         )}
       </div>
@@ -455,7 +458,7 @@ const ExperienceSection = () => {
   );
 };
 
-// Contact Section Component (updated with EmailJS)
+// Contact Section Component
 const ContactSection = () => {
   const formRef = useRef();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -465,11 +468,17 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    emailjs.sendForm(
-      'service_vhfjyip', // Replace with your EmailJS service ID
-      'template_srhc5vt', // Replace with your EmailJS template ID
-      formRef.current,
-      '6X9IaW7_HdGChYrSt' // Replace with your EmailJS user ID
+    const formData = {
+      user_name: DOMPurify.sanitize(formRef.current.user_name.value),
+      user_email: DOMPurify.sanitize(formRef.current.user_email.value),
+      message: DOMPurify.sanitize(formRef.current.message.value),
+    };
+
+    emailjs.send(
+      process.env.REACT_APP_EMAILJS_SERVICE_ID,
+      process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+      formData,
+      process.env.REACT_APP_EMAILJS_USER_ID
     )
     .then((result) => {
       console.log(result.text);
@@ -501,6 +510,7 @@ const ContactSection = () => {
               required
               className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors"
               placeholder="Your Name"
+              aria-required="true"
             />
           </div>
           <div>
@@ -512,6 +522,7 @@ const ContactSection = () => {
               required
               className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors"
               placeholder="your.email@example.com"
+              aria-required="true"
             />
           </div>
           <div>
@@ -523,6 +534,7 @@ const ContactSection = () => {
               required
               className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors resize-none"
               placeholder="Your message..."
+              aria-required="true"
             ></textarea>
           </div>
           <div>
@@ -551,12 +563,11 @@ const ContactSection = () => {
   );
 };
 
-// Footer Component (remains the same)
+// Footer Component
 const Footer = () => {
   const socialLinks = [
-    { href: "https://github.com/yourusername", icon: <Github size={24} />, label: "GitHub" },
-    { href: "https://linkedin.com/in/yourusername", icon: <Linkedin size={24} />, label: "LinkedIn" },
-    { href: "https://twitter.com/yourusername", icon: <Twitter size={24} />, label: "Twitter" },
+    { href: "https://github.com/babi127", icon: <Github size={24} />, label: "GitHub" },
+    { href: "https://www.linkedin.com/in/biruk-tesfaye-0642b4284/", icon: <Linkedin size={24} />, label: "LinkedIn" },
   ];
 
   return (
@@ -587,7 +598,7 @@ const Footer = () => {
   );
 };
 
-// Main App Component - MODIFIED IntersectionObserver options
+// Main App Component
 function App() {
   const [activeSection, setActiveSection] = useState('home');
   const sectionRefs = {
@@ -600,16 +611,12 @@ function App() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && document.documentElement) {
-        document.documentElement.style.scrollBehavior = 'smooth';
+      document.documentElement.style.scrollBehavior = 'smooth';
     }
 
-    // MODIFIED Intersection Observer options
     const observerOptions = {
       root: null,
-      // Adjust rootMargin to account for fixed navbar height (e.g., -80px from the top)
-      // This means intersection is calculated as if the viewport starts 80px lower.
       rootMargin: '-80px 0px 0px 0px',
-      // MODIFIED threshold: trigger when 40% of the section is visible
       threshold: 0.4
     };
 
