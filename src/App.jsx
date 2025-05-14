@@ -479,10 +479,10 @@ const ContactSection = () => {
 
     try {
       const result = await emailjs.send(
-        process.env.REACT_APP_EMAILJS_SERVICE_ID,
-        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+        'service_vhfjyip', // Replace with your actual EmailJS service ID
+        'template_srhc5vt', // Replace with your actual EmailJS template ID
         formData,
-        process.env.REACT_APP_EMAILJS_USER_ID
+        '6X9IaW7_HdGChYrSt' // Replace with your actual EmailJS user ID
       );
       console.log('Email sent successfully:', result.text);
       setSubmitStatus('success');
