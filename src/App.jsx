@@ -464,9 +464,10 @@ const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus(null);
 
     const formData = {
       user_name: DOMPurify.sanitize(formRef.current.user_name.value),
@@ -474,23 +475,24 @@ const ContactSection = () => {
       message: DOMPurify.sanitize(formRef.current.message.value),
     };
 
-    emailjs.send(
-      process.env.REACT_APP_EMAILJS_SERVICE_ID,
-      process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
-      formData,
-      process.env.REACT_APP_EMAILJS_USER_ID
-    )
-    .then((result) => {
-      console.log(result.text);
+    console.log('Sending email with data:', formData);
+
+    try {
+      const result = await emailjs.send(
+        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+        formData,
+        process.env.REACT_APP_EMAILJS_USER_ID
+      );
+      console.log('Email sent successfully:', result.text);
       setSubmitStatus('success');
       formRef.current.reset();
-    }, (error) => {
-      console.log(error.text);
+    } catch (error) {
+      console.error('Error sending email:', error);
       setSubmitStatus('error');
-    })
-    .finally(() => {
+    } finally {
       setIsSubmitting(false);
-    });
+    }
   };
 
   return (
